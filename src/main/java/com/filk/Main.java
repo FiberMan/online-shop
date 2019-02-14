@@ -1,11 +1,15 @@
 package com.filk;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-
 import javax.sql.DataSource;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.Properties;
+import java.util.Random;
 
 public class Main {
 
@@ -18,12 +22,23 @@ public class Main {
     // TODO: store login/pass -> hash
     // TODO: read: Optional, DispatcherType
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         // config
         Properties properties = new Properties();
-        try(FileInputStream fileInputStream = new FileInputStream("src/main/resources/jdbc.properties")) {
+        try(FileInputStream fileInputStream = new FileInputStream("src/main/resources/db.properties")) {
             properties.load(fileInputStream);
         }
+
+//        printSaltHash("password");
+//        User: Filk
+//        Pass: password
+//        Salt: 95cKMbb0LCI0srpDhnJYHA==
+//        Hash: BpLblmouLG7W6skmw3zF9w==
+
+//        User: test
+//        Pass: password
+//        Salt: kegiMoJIhOayTS82BhFZTw==
+//        Hash: tuK/ZiROmB7PcWw6F/N1eg==
 
         // dao
         DataSource dataSource = createDataSource(properties);
@@ -31,10 +46,34 @@ public class Main {
         // services
 
 
+
+
         // servlets
 
 
 
+    }
+
+    private static void printSaltHash(String password) throws NoSuchAlgorithmException {
+        String salt = getSalt();
+        String hash = getHash(password + salt);
+        System.out.println("Pass: " + password);
+        System.out.println("Salt: " + salt);
+        System.out.println("Hash: " + hash);
+    }
+
+    private static String getSalt() {
+        Random RANDOM = new SecureRandom();
+        byte[] salt = new byte[16];
+        RANDOM.nextBytes(salt);
+        return Base64.getEncoder().encodeToString(salt);
+    }
+
+    private static String getHash(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(password.getBytes());
+        byte[] digest = md.digest();
+        return Base64.getEncoder().encodeToString(digest);
     }
 
     private static DataSource createDataSource(Properties properties) {

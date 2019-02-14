@@ -5,7 +5,7 @@ public class User {
     private String name;
     private String login;
     private String loginHash;
-    private String salt;
+    private String loginSalt;
     private UserRole userRole;
 
     public int getId() {
@@ -40,12 +40,12 @@ public class User {
         this.loginHash = loginHash;
     }
 
-    public String getSalt() {
-        return salt;
+    public String getLoginSalt() {
+        return loginSalt;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setLoginSalt(String loginSalt) {
+        this.loginSalt = loginSalt;
     }
 
     public UserRole getUserRole() {
