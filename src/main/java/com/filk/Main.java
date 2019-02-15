@@ -1,7 +1,11 @@
 package com.filk;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
-import javax.sql.DataSource;
+import com.filk.dao.ProductDao;
+import com.filk.dao.UserDao;
+import com.filk.dao.jdbc.JdbcProductDao;
+import com.filk.dao.jdbc.JdbcUserDao;
+import com.filk.dao.jdbc.JdbcUtils;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -41,7 +45,12 @@ public class Main {
 //        Hash: tuK/ZiROmB7PcWw6F/N1eg==
 
         // dao
-        DataSource dataSource = createDataSource(properties);
+        //DataSource dataSource = createDataSource(properties);
+        JdbcUtils jdbcUtils = new JdbcUtils(properties);
+
+        UserDao userDao = new JdbcUserDao(jdbcUtils);
+        //ProductDao productDao = new JdbcProductDao(dataSource);
+
 
         // services
 
@@ -74,14 +83,5 @@ public class Main {
         md.update(password.getBytes());
         byte[] digest = md.digest();
         return Base64.getEncoder().encodeToString(digest);
-    }
-
-    private static DataSource createDataSource(Properties properties) {
-        // TODO: is it really a connection pool?
-        MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setUrl(properties.getProperty("url"));
-        dataSource.setUser(properties.getProperty("username"));
-        dataSource.setPassword(properties.getProperty("password"));
-        return dataSource;
     }
 }

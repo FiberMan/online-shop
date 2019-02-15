@@ -35,4 +35,4 @@ INSERT INTO onlineshop.product (name, description, price) VALUES ('Картош�
 INSERT INTO onlineshop.product (name, description, price) VALUES ('Кастрюля', 'Чугунная и тяжелая', 555.55);
 commit;
 
-SELECT * FROM onlineshop.product;
+--SELECT * FROM onlineshop.product;

@@ -55,4 +55,16 @@ public class User {
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", login='" + login + '\'' +
+                ", loginHash='" + loginHash + '\'' +
+                ", loginSalt='" + loginSalt + '\'' +
+                ", userRole=" + userRole +
+                '}';
+    }
 }
