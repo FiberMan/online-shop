@@ -16,14 +16,16 @@ public class JdbcUserDao implements UserDao {
     }
 
     public User getByLogin(String login) {
-        try (ResultSet resultSet = jdbcUtils.select(SQL_GET_USER_BY_LOGIN, login)) {
-            User user = new User();
+        try {
+            ResultSet resultSet = jdbcUtils.select(SQL_GET_USER_BY_LOGIN, login);
+            User user = null;
             if (resultSet.next()) {
                 user = UserMapper.map(resultSet);
             }
+            resultSet.getStatement().getConnection().close();   // Closing: Connection -> Statement -> ResultSet
             return user;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("SQL Exception: Can't get User by Login. Login = " + login, e);
         }
     }
 

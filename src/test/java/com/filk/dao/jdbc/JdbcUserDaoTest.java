@@ -40,6 +40,6 @@ public class JdbcUserDaoTest {
         assertEquals("USER", user.getUserRole().getName());
 
         user = jdbcUserDao.getByLogin("not_exists");
-        assertNull(user.getLogin());
+        assertNull(user);
     }
 }

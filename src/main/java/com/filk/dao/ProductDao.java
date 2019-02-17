@@ -9,9 +9,11 @@ public interface ProductDao {
 
     Product getById(int id);
 
-    void insert(Product product);
+    Product getByName(String name);
 
-    void update(Product product);
+    boolean insert(Product product);
 
-    void deleteById(int id);
+    boolean update(Product product);
+
+    boolean deleteById(int id);
 }

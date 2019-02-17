@@ -5,9 +5,16 @@ import com.filk.dao.UserDao;
 import com.filk.dao.jdbc.JdbcProductDao;
 import com.filk.dao.jdbc.JdbcUserDao;
 import com.filk.dao.jdbc.JdbcUtils;
+import com.filk.service.impl.DefaultProductService;
+import com.filk.service.impl.DefaultUserService;
+import com.filk.web.servlets.AddProductServlet;
+import com.filk.web.servlets.AllRequestsServlet;
+import com.filk.web.servlets.ShowAllProductsServlet;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -17,16 +24,17 @@ import java.util.Random;
 
 public class Main {
 
-    // TODO: prepareStatement
-    // TODO: data, mapper, service, presentation layers
-    // TODO: bootstrap
+    // +TODO: prepareStatement
+    // +TODO: data, mapper, service,
+    // TODO: presentation layer
+    // +TODO: bootstrap
     // TODO: login
     // TODO: add servlet filters
-    // TODO: connection through DataSource
+    // +TODO: connection through DataSource
     // TODO: store login/pass -> hash
     // TODO: read: Optional, DispatcherType
 
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+    public static void main(String[] args) throws Exception {
         // config
         Properties properties = new Properties();
         try(FileInputStream fileInputStream = new FileInputStream("src/main/resources/db.properties")) {
@@ -49,18 +57,26 @@ public class Main {
         JdbcUtils jdbcUtils = new JdbcUtils(properties);
 
         UserDao userDao = new JdbcUserDao(jdbcUtils);
-        //ProductDao productDao = new JdbcProductDao(dataSource);
+        ProductDao productDao = new JdbcProductDao(jdbcUtils);
 
 
         // services
-
-
-
+        DefaultUserService userService = new DefaultUserService(userDao);
+        DefaultProductService productService = new DefaultProductService(productDao);
 
         // servlets
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.addServlet(new ServletHolder(new ShowAllProductsServlet(productService)), "/products");
+        context.addServlet(new ServletHolder(new AddProductServlet(productService)), "/product/add");
+//        context.addServlet(new ServletHolder(new EditProductServlet(productService)), "/product/edit");
+//        context.addServlet(new ServletHolder(new DeleteProductServlet(productService)), "/product/delete");
+//        context.addServlet(new ServletHolder(new LoginServlet()), "/login");
+//        context.addServlet(new ServletHolder(new LogoutServlet(productService)), "/logout");
+        context.addServlet(new ServletHolder(new AllRequestsServlet()), "/*");
 
-
-
+        Server server = new Server(8080);
+        server.setHandler(context);
+        server.start();
     }
 
     private static void printSaltHash(String password) throws NoSuchAlgorithmException {

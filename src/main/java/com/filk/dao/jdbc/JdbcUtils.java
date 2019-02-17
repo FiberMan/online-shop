@@ -21,28 +21,6 @@ public class JdbcUtils {
         this.dataSource = mysqlDataSource;
     }
 
-    private PreparedStatement prepareSql(String query, Object... conditions) {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            for (int i = 0; i < conditions.length; i++) {
-                Object condition = conditions[i];
-                if (condition instanceof String) {
-                    preparedStatement.setString(i + 1, (String) condition);
-                } else if (condition instanceof Integer) {
-                    preparedStatement.setInt(i + 1, (Integer) condition);
-                } else if (condition instanceof Double) {
-                    preparedStatement.setDouble(i + 1, (Double) condition);
-                } else {
-                    throw new IllegalArgumentException("Not supported object type: " + condition.getClass().getName());
-                }
-            }
-            return preparedStatement;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     ResultSet select(String query, Object... conditions) throws SQLException {
         PreparedStatement preparedStatement = prepareSql(query, conditions);
         if (!preparedStatement.execute()) {
@@ -52,15 +30,32 @@ public class JdbcUtils {
 
     }
 
-//    PreparedStatement update(String query, Object... conditions) throws SQLException {
-//        try (PreparedStatement preparedStatement = prepareSql(query, conditions)) {
-//            if (preparedStatement.execute()) {
-//                throw new RuntimeException("Looks like a SELECT statement.");
-//            }
-//            return preparedStatement;
-//        }
-//    }
+    int update(String query, Object... conditions) throws SQLException {
+        try (PreparedStatement preparedStatement = prepareSql(query, conditions)) {
+            if (preparedStatement.execute()) {
+                throw new RuntimeException("Looks like a SELECT statement.");
+            }
+            return preparedStatement.getUpdateCount();
+        }
+    }
 
+    private PreparedStatement prepareSql(String query, Object... conditions) throws SQLException {
+        Connection connection = dataSource.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        for (int i = 0; i < conditions.length; i++) {
+            Object condition = conditions[i];
+            if (condition instanceof String) {
+                preparedStatement.setString(i + 1, (String) condition);
+            } else if (condition instanceof Integer) {
+                preparedStatement.setInt(i + 1, (Integer) condition);
+            } else if (condition instanceof Double) {
+                preparedStatement.setDouble(i + 1, (Double) condition);
+            } else {
+                throw new IllegalArgumentException("Not supported object type: " + condition.getClass().getName());
+            }
+        }
+        return preparedStatement;
+    }
 
 //    public User getByLogin(String login) {
 //        try (Connection connection = dataSource.getConnection();

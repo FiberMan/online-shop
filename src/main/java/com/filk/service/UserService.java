@@ -1,4 +1,7 @@
 package com.filk.service;
 
-public class UserService {
+import com.filk.entity.User;
+
+public interface UserService {
+    User getByLogin(String login);
 }
