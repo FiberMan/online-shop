@@ -8,7 +8,6 @@
     <link rel="stylesheet" type="text/css" href="/src/main/resources/styles/styles.css">
 </head>
 <body>
-<!--<div style="width: 50%; margin: auto;">-->
     <#include "menu.ftl">
     <table class="table table-hover table-sm table-bordered">
         <caption>${title}</caption>
@@ -29,12 +28,12 @@
             <td>${product.description}</td>
             <td>${product.price}</td>
             <td>
-                <form method="get" action="/product/edit" style="display: inline-block;">
-                    <input type="submit" value="Edit">
+                <form method="get" action="/product/edit">
+                    <input type="submit" value="Edit" <#if !is_admin>disabled</#if> >
                     <input name="product_id" type="hidden" value="${product.id}">
                 </form>
-                <form method="post" action="/product/remove" style="display: inline-block;">
-                    <input type="submit" value="Remove">
+                <form method="post" action="/product/delete">
+                    <input type="submit" value="Delete" <#if !is_admin>disabled</#if> >
                     <input name="product_id" type="hidden" value="${product.id}">
                 </form>
             </td>

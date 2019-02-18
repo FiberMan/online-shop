@@ -2,11 +2,8 @@ package com.filk.web.servlets;
 
 import com.filk.entity.Product;
 import com.filk.service.ProductService;
-import com.filk.service.impl.DefaultProductService;
 import com.filk.web.utils.PageGenerator;
-import org.eclipse.jetty.servlet.Source;
 
-import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,8 +29,8 @@ public class AddProductServlet extends HttpServlet {
         pageVariables.put("price", "");
         pageVariables.put("nav_state_products", "");
         pageVariables.put("nav_state_product_add", "active");
-        pageVariables.put("nav_state_login", "");
-        pageVariables.put("nav_state_logout", "disabled");
+        pageVariables.put("nav_state_login", "disabled");
+        pageVariables.put("nav_state_logout", "");
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("text/html;charset=utf-8");
@@ -50,19 +47,18 @@ public class AddProductServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put("nav_state_products", "");
         pageVariables.put("nav_state_product_add", "active");
-        pageVariables.put("nav_state_login", "");
-        pageVariables.put("nav_state_logout", "disabled");
+        pageVariables.put("nav_state_login", "disabled");
+        pageVariables.put("nav_state_logout", "");
         if(productService.insert(product)) {
-            pageVariables.put("title", "User added");
-            pageVariables.put("update_resolution", "New user has been added: " + product.getName());
+            pageVariables.put("title", "Product added");
+            pageVariables.put("message", "New product has been added: " + product.getName());
         } else {
-            pageVariables.put("title", "Failed to add user");
-            pageVariables.put("update_resolution", "Failed to add new user: " + product.getName());
+            pageVariables.put("title", "Failed to add product");
+            pageVariables.put("message", "Failed to add new product: " + product.getName());
         }
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("text/html;charset=utf-8");
-        response.getWriter().println(PageGenerator.instance().getPage("product_updated.html", pageVariables));
-
+        response.getWriter().println(PageGenerator.instance().getPage("message.html", pageVariables));
     }
 }
