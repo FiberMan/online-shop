@@ -1,6 +1,6 @@
 package com.filk.dao.jdbc;
 
-import com.mysql.cj.jdbc.MysqlDataSource;
+import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -14,11 +14,11 @@ public class JdbcUtils {
 
     public JdbcUtils(Properties properties) {
         // TODO: is it really a connection pool?
-        MysqlDataSource mysqlDataSource = new MysqlDataSource();
-        mysqlDataSource.setUrl(properties.getProperty("jdbc.url"));
-        mysqlDataSource.setUser(properties.getProperty("jdbc.username"));
-        mysqlDataSource.setPassword(properties.getProperty("jdbc.password"));
-        this.dataSource = mysqlDataSource;
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        dataSource.setUrl(properties.getProperty("jdbc.url"));
+        dataSource.setUser(properties.getProperty("jdbc.username"));
+        dataSource.setPassword(properties.getProperty("jdbc.password"));
+        this.dataSource = dataSource;
     }
 
     ResultSet select(String query, Object... conditions) throws SQLException {

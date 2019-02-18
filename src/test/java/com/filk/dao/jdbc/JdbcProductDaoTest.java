@@ -25,7 +25,7 @@ public class JdbcProductDaoTest {
         productDao = new JdbcProductDao(jdbcUtils);
 
         // refresh database
-        String sql = getFileContent("src/main/resources/sql/create_tables.sql")
+        String sql = getFileContent("src/main/resources/sql/pg_create_tables.sql")
                 + getFileContent("src/main/resources/sql/insert_data.sql");
         for (String s : sql.split(";")) {
             if (!s.isEmpty()) {

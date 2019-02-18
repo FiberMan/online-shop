@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class JdbcUserDao implements UserDao {
-    private final String SQL_GET_USER_BY_LOGIN = "SELECT * FROM user WHERE login = ?";
+    private final String SQL_GET_USER_BY_LOGIN = "SELECT * FROM \"user\" WHERE lower(login) = lower(?)";
     private JdbcUtils jdbcUtils;
 
     public JdbcUserDao(JdbcUtils jdbcUtils) {
