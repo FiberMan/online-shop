@@ -1,2 +1,3 @@
-CREATE SCHEMA onlineshop
-    AUTHORIZATION admin;
+begin;
+CREATE SCHEMA onlineshop;
+commit;

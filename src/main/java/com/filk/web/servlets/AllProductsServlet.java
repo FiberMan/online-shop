@@ -3,11 +3,8 @@ package com.filk.web.servlets;
 import com.filk.entity.Session;
 import com.filk.service.ProductService;
 import com.filk.service.SecurityService;
-import com.filk.service.impl.DefaultProductService;
 import com.filk.web.utils.PageGenerator;
-import org.eclipse.jetty.servlet.Source;
 
-import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

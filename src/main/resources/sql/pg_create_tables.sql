@@ -1,3 +1,4 @@
+BEGIN;
 DROP TABLE IF EXISTS onlineshop.user;
 CREATE TABLE onlineshop.user (
   user_id serial primary key,
@@ -16,3 +17,4 @@ CREATE TABLE onlineshop.product (
     description varchar(250),
     price numeric(10, 2)
 );
+COMMIT;

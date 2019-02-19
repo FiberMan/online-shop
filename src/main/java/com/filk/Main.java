@@ -37,7 +37,7 @@ public class Main {
         try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/db.properties")) {
             properties.load(fileInputStream);
         }
-
+//Class.forName("javax.servlet.Servlet");
 //        printSaltHash("password");
 //        User: Filk
 //        Pass: password

@@ -4,7 +4,6 @@ import com.filk.entity.Session;
 import com.filk.service.SecurityService;
 import com.filk.web.utils.PageGenerator;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
