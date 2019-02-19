@@ -64,8 +64,7 @@ public class JdbcUtils {
     }
 
     private String getHerokuDatabaseUrl() {
-//        return System.getenv("JDBC_DATABASE_URL");
-        return "jdbc:postgresql://localhost:5432/learn?user=postgres&password=root";
+        return System.getenv("JDBC_DATABASE_URL");
     }
 
 //    public User getByLogin(String login) {
