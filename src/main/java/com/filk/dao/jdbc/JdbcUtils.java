@@ -14,10 +14,16 @@ public class JdbcUtils {
 
     public JdbcUtils(Properties properties) {
         // TODO: is it really a connection pool?
+        String herokuDatabaseUrl = getHerokuDatabaseUrl();
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
-        dataSource.setUrl(properties.getProperty("jdbc.url"));
-        dataSource.setUser(properties.getProperty("jdbc.username"));
-        dataSource.setPassword(properties.getProperty("jdbc.password"));
+
+        if(herokuDatabaseUrl == null) {
+            dataSource.setUrl(properties.getProperty("jdbc.url"));
+            dataSource.setUser(properties.getProperty("jdbc.username"));
+            dataSource.setPassword(properties.getProperty("jdbc.password"));
+        } else {
+            dataSource.setUrl(herokuDatabaseUrl + "&currentSchema=onlineshop");
+        }
         this.dataSource = dataSource;
     }
 
@@ -55,6 +61,11 @@ public class JdbcUtils {
             }
         }
         return preparedStatement;
+    }
+
+    private String getHerokuDatabaseUrl() {
+//        return System.getenv("JDBC_DATABASE_URL");
+        return "jdbc:postgresql://localhost:5432/learn?user=postgres&password=root";
     }
 
 //    public User getByLogin(String login) {

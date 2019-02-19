@@ -38,6 +38,11 @@ public class Main {
             properties.load(fileInputStream);
         }
 
+        int port = 8080;
+        String portEnv = System.getenv().get("PORT");
+        if (portEnv != null) {
+            port = Integer.parseInt(portEnv);
+        }
 //        printSaltHash("password");
 //        User: Filk
 //        Pass: password
@@ -76,7 +81,7 @@ public class Main {
         context.addFilter(new FilterHolder(new AuthFilter(securityService)), "/product/*",
                 EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD));
 
-        Server server = new Server(8080);
+        Server server = new Server(port);
         server.setHandler(context);
         server.start();
     }
