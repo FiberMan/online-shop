@@ -5,19 +5,21 @@
     <title>${title}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="/src/main/resources/styles/styles.css">
+    <link rel="stylesheet" type="text/css" href="/styles/styles.css">
 </head>
 <body>
     <#include "menu.ftl">
     <table class="table table-hover table-sm table-bordered">
         <caption>${title}</caption>
-        <thead>
+        <thead class="bg-info text-light">
         <tr>
             <th scope="col">ID</th>
             <th scope="col">Name</th>
             <th scope="col">Description</th>
             <th scope="col">Price</th>
+            <#if can_edit>
             <th scope="col">Action</th>
+            </#if>
         </tr>
         </thead>
         <tbody>
@@ -27,16 +29,18 @@
             <td>${product.name}</td>
             <td>${product.description}</td>
             <td>${product.price}</td>
+            <#if can_edit>
             <td>
                 <form method="get" action="/product/edit">
-                    <input type="submit" value="Edit" <#if !is_admin>disabled</#if> >
+                    <input type="submit" value="Edit">
                     <input name="product_id" type="hidden" value="${product.id}">
                 </form>
                 <form method="post" action="/product/delete">
-                    <input type="submit" value="Delete" <#if !is_admin>disabled</#if> >
+                    <input type="submit" value="Delete">
                     <input name="product_id" type="hidden" value="${product.id}">
                 </form>
             </td>
+            </#if>
         </tr>
         </#list>
         </tbody>

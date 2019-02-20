@@ -1,8 +1,8 @@
 package com.filk.entity;
 
 public enum UserRole {
-    USER("USER"),
-    ADMIN("ADMIN");
+    USER("USER"),   // can manage products
+    ADMIN("ADMIN"); // can manage users also
 
     private final String name;
 
@@ -21,6 +21,11 @@ public enum UserRole {
     }
 
     public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
         return name;
     }
 }

@@ -1,6 +1,7 @@
 package com.filk.service;
 
 import com.filk.entity.Session;
+import com.filk.entity.User;
 
 import javax.servlet.http.Cookie;
 import java.security.MessageDigest;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class SecurityService {
-    private final int SESSION_LIFETIME_HOURS = 2;
+    private final int SESSION_LIFETIME_MINUTES = 2;
     private final String TOKEN_NAME = "user-token";
 
     private UserService userService;
@@ -21,17 +22,17 @@ public class SecurityService {
     }
 
     public Session login(String login, String password) {
+        User user = userService.getByLogin(login);
+        if (user == null || !user.getLoginHash().equals(getHash(password + user.getLoginSalt()))) {
+            return null;
+        }
 
-        // check user
-
-        // add session
         Session session = new Session();
         session.setTokenName(TOKEN_NAME);
         session.setToken(UUID.randomUUID().toString());
-        session.setExpireDate(LocalDateTime.now().plusHours(SESSION_LIFETIME_HOURS));
-        //session.setUser(user);
+        session.setExpireDate(getExpireDate());
+        session.setUser(user);
 
-        // add to sessions
         sessions.add(session);
 
         return session;
@@ -39,15 +40,12 @@ public class SecurityService {
 
     public Cookie logout(Cookie[] cookies) {
         Session session = getValidSession(cookies);
-        Cookie cookie;
 
         if (session != null) {
             sessions.remove(session);
-            cookie = session.getCookie();
-        } else {
-            cookie = new Cookie(TOKEN_NAME, "");
         }
 
+        Cookie cookie = new Cookie(TOKEN_NAME, "");
         cookie.setMaxAge(0);
         return cookie;
     }
@@ -58,7 +56,13 @@ public class SecurityService {
                 if (TOKEN_NAME.equals(cookie.getName())) {
                     for (Session session : sessions) {
                         if (session.getToken().equals(cookie.getValue())) {
-                            return session;
+                            if (session.isLive()) {
+                                session.setExpireDate(getExpireDate()); // update expiration date
+                                return session;
+                            } else {
+                                sessions.remove(session);
+                                return null;
+                            }
                         }
                     }
                 }
@@ -67,16 +71,24 @@ public class SecurityService {
         return null;
     }
 
+
     public boolean isTokenValid(Cookie[] cookies) {
         return getValidSession(cookies) != null;
     }
 
-    private static void printSaltHash(String password) throws NoSuchAlgorithmException {
-        String salt = getSalt();
-        String hash = getHash(password + salt);
-        System.out.println("Pass: " + password);
-        System.out.println("Salt: " + salt);
-        System.out.println("Hash: " + hash);
+    private LocalDateTime getExpireDate() {
+        return LocalDateTime.now().plusMinutes(SESSION_LIFETIME_MINUTES);
+    }
+
+    public static String getHash(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(password.getBytes());
+            byte[] digest = md.digest();
+            return Base64.getEncoder().encodeToString(digest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static String getSalt() {
@@ -86,10 +98,11 @@ public class SecurityService {
         return Base64.getEncoder().encodeToString(salt);
     }
 
-    private static String getHash(String password) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update(password.getBytes());
-        byte[] digest = md.digest();
-        return Base64.getEncoder().encodeToString(digest);
+    private static void printSaltHash(String password) {
+        String salt = getSalt();
+        String hash = getHash(password + salt);
+        System.out.println("Pass: " + password);
+        System.out.println("Salt: " + salt);
+        System.out.println("Hash: " + hash);
     }
 }

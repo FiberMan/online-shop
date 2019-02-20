@@ -1,6 +1,7 @@
 package com.filk.web.servlets;
 
 import com.filk.entity.Session;
+import com.filk.entity.UserRole;
 import com.filk.service.SecurityService;
 import com.filk.web.utils.PageGenerator;
 
@@ -20,19 +21,22 @@ public class LoginServlet extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Session session = securityService.getValidSession(request.getCookies());
+        boolean isLoggedIn = session != null;
 
         // User already logged in
-        if(session != null) {
+        if(isLoggedIn) {
             response.sendRedirect("/products");
         }
 
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put("title", "Login page");
         pageVariables.put("nav_state_products", "");
-        pageVariables.put("nav_state_product_add", "");
+        pageVariables.put("nav_state_product_add", "disabled");
+        pageVariables.put("nav_state_users", "disabled");
         pageVariables.put("nav_state_login", "active");
         pageVariables.put("nav_state_logout", "disabled");
-        pageVariables.put("message", "");
+        pageVariables.put("user_name", "");
+                pageVariables.put("message", "");
 
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("text/html;charset=utf-8");
@@ -41,9 +45,10 @@ public class LoginServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Session session = securityService.getValidSession(request.getCookies());
+        boolean isLoggedIn = session != null;
 
         // User already logged in
-        if(session != null) {
+        if(isLoggedIn) {
             response.sendRedirect("/products");
         }
 
@@ -53,11 +58,13 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("/products");
         } else {
             Map<String, Object> pageVariables = new HashMap<>();
-            pageVariables.put("title", "Product added");
+            pageVariables.put("title", "Login page");
             pageVariables.put("nav_state_products", "");
-            pageVariables.put("nav_state_product_add", "");
+            pageVariables.put("nav_state_product_add", "disabled");
+            pageVariables.put("nav_state_users", "disabled");
             pageVariables.put("nav_state_login", "active");
             pageVariables.put("nav_state_logout", "disabled");
+            pageVariables.put("user_name", "");
             pageVariables.put("message", "Wrong User or Password.");
 
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

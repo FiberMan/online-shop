@@ -44,4 +44,8 @@ public class Session {
     public void setExpireDate(LocalDateTime expireDate) {
         this.expireDate = expireDate;
     }
+
+    public boolean isLive() {
+        return LocalDateTime.now().isBefore(expireDate);
+    }
 }

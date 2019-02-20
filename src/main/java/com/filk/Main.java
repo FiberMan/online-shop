@@ -43,7 +43,8 @@ public class Main {
         if (portEnv != null) {
             port = Integer.parseInt(portEnv);
         }
-//        printSaltHash("password");
+
+//        System.out.println(SecurityService.getHash("password95cKMbb0LCI0srpDhnJYHA=="));
 //        User: Filk
 //        Pass: password
 //        Salt: 95cKMbb0LCI0srpDhnJYHA==
@@ -53,6 +54,7 @@ public class Main {
 //        Pass: password
 //        Salt: kegiMoJIhOayTS82BhFZTw==
 //        Hash: tuK/ZiROmB7PcWw6F/N1eg==
+
 
         // dao
         //DataSource dataSource = createDataSource(properties);
@@ -70,15 +72,21 @@ public class Main {
         // servlets
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(new AllProductsServlet(productService, securityService)), "/products");
-        context.addServlet(new ServletHolder(new AddProductServlet(productService)), "/product/add");
-        context.addServlet(new ServletHolder(new EditProductServlet(productService)), "/product/edit");
-        context.addServlet(new ServletHolder(new DeleteProductServlet(productService)), "/product/delete");
+        context.addServlet(new ServletHolder(new AddProductServlet(productService, securityService)), "/product/add");
+        context.addServlet(new ServletHolder(new EditProductServlet(productService, securityService)), "/product/edit");
+        context.addServlet(new ServletHolder(new DeleteProductServlet(productService, securityService)), "/product/delete");
+        context.addServlet(new ServletHolder(new AllUsersServlet(userService, securityService)), "/users");
         context.addServlet(new ServletHolder(new LoginServlet(securityService)), "/login");
         context.addServlet(new ServletHolder(new LogoutServlet(securityService)), "/logout");
+        context.addServlet(new ServletHolder(new IndexServlet()), "/");
         context.addServlet(new ServletHolder(new AllRequestsServlet()), "/*");
 
         // filters
         context.addFilter(new FilterHolder(new AuthFilter(securityService)), "/product/*",
+                EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD));
+        context.addFilter(new FilterHolder(new AuthFilter(securityService)), "/users",
+                EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD));
+        context.addFilter(new FilterHolder(new AdminFilter(securityService)), "/users",
                 EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD));
 
         Server server = new Server(port);

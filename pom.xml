@@ -46,33 +46,20 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>com.filk.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
         </plugins>
 
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>*</include>
-                    <include>sql/*</include>
-                    <include>styles/*</include>
-                    <include>templates/*</include>
-                </includes>
-                <targetPath>../src/main/resources/</targetPath>
-            </resource>
-        </resources>
+        <!--<resources>-->
+            <!--<resource>-->
+                <!--<directory>src/main/resources</directory>-->
+                <!--<includes>-->
+                    <!--<include>*</include>-->
+                    <!--<include>sql/*</include>-->
+                    <!--<include>styles/*</include>-->
+                    <!--<include>templates/*</include>-->
+                <!--</includes>-->
+                <!--<targetPath>../src/main/resources/</targetPath>-->
+            <!--</resource>-->
+        <!--</resources>-->
     </build>
 
     <dependencies>
