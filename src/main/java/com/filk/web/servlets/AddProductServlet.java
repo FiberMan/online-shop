@@ -36,7 +36,7 @@ public class AddProductServlet extends HttpServlet {
         pageVariables.put("product_id", "");
         pageVariables.put("name", "");
         pageVariables.put("description", "");
-        pageVariables.put("price", "");
+        pageVariables.put("price", 0);
         pageVariables.put("nav_state_products", "");
         pageVariables.put("nav_state_product_add", "active");
         pageVariables.put("nav_state_users", isAdmin ? "" : "disabled");
