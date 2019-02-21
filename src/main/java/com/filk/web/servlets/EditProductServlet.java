@@ -41,7 +41,7 @@ public class EditProductServlet extends HttpServlet {
             pageVariables.put("product_id", product.getId());
             pageVariables.put("name", product.getName());
             pageVariables.put("description", product.getDescription());
-            pageVariables.put("price", String.valueOf(product.getPrice()));
+            pageVariables.put("price", product.getPrice());
             pageVariables.put("nav_state_products", "");
             pageVariables.put("nav_state_product_add", "");
             pageVariables.put("nav_state_users", isAdmin ? "" : "disabled");

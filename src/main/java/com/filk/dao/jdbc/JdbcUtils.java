@@ -4,11 +4,7 @@ import com.filk.utils.AppUtils;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -70,12 +66,15 @@ public class JdbcUtils {
     }
 
     public void refreshDatabase() throws IOException {
-        URL resource1 = getClass().getClassLoader().getResource("sql/pg_create_tables.sql");
-        URL resource2 = getClass().getClassLoader().getResource("sql/insert_data.sql");
+        InputStream resourceAsStream1 = getClass().getClassLoader().getResourceAsStream("sql/pg_create_tables.sql");
+        InputStream resourceAsStream2 = getClass().getClassLoader().getResourceAsStream("sql/insert_data.sql");
+
+        String sqlStructure = AppUtils.getFileContent(resourceAsStream1);
+        String sqlData = AppUtils.getFileContent(resourceAsStream2);
 
         // refresh database
         try {
-            String sql = AppUtils.getFileContent(resource1.getPath()) + AppUtils.getFileContent(resource2.getPath());
+            String sql = sqlStructure + sqlData;
             for (String s : sql.split(";")) {
                 if (!s.isEmpty()) {
                     update(s);

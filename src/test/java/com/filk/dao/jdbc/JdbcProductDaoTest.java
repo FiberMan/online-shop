@@ -19,7 +19,7 @@ public class JdbcProductDaoTest {
 
 
         Properties properties = new Properties();
-        try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/application.properties")) {
+        try (FileInputStream fileInputStream = new FileInputStream("application.properties")) {
             properties.load(fileInputStream);
         }
         JdbcUtils jdbcUtils = new JdbcUtils(properties);

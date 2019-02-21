@@ -1,9 +1,9 @@
 package com.filk.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import org.apache.commons.io.IOUtils;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class AppUtils {
     public static String getFileContent(String filePath) throws IOException {
@@ -17,4 +17,9 @@ public class AppUtils {
         br.close();
         return file_content.toString();
     }
+
+    public static String getFileContent(InputStream inputStream) throws IOException {
+        return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+    }
+
 }
