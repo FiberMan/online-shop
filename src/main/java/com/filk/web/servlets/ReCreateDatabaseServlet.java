@@ -20,7 +20,7 @@ public class ReCreateDatabaseServlet extends HttpServlet {
             jdbcUtils.refreshDatabase();
             pageContent = "Database refreshed";
         } catch (IOException e) {
-            pageContent = "Can't refresh database";
+            pageContent = "Can't refresh database.\n" + e.getMessage();
             System.out.println(pageContent);
             e.printStackTrace();
         }
