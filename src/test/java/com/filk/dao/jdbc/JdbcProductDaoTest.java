@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Properties;
 
@@ -16,22 +15,18 @@ public class JdbcProductDaoTest {
     private ProductDao productDao;
 
     @Before
-    public void before() throws IOException, SQLException {
+    public void before() throws IOException {
+
+
         Properties properties = new Properties();
-        try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/db.properties")) {
+        try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/application.properties")) {
             properties.load(fileInputStream);
         }
         JdbcUtils jdbcUtils = new JdbcUtils(properties);
         productDao = new JdbcProductDao(jdbcUtils);
 
         // refresh database
-        String sql = getFileContent("src/main/resources/sql/pg_create_tables.sql")
-                + getFileContent("src/main/resources/sql/insert_data.sql");
-        for (String s : sql.split(";")) {
-            if (!s.isEmpty()) {
-                jdbcUtils.update(s);
-            }
-        }
+        jdbcUtils.refreshDatabase();
     }
 
     @Test
@@ -129,17 +124,5 @@ public class JdbcProductDaoTest {
         assertEquals("Кастрюля", product.getName());
         assertEquals("Чугунная и тяжелая", product.getDescription());
         assertEquals(555.55, product.getPrice(), 0.001);
-    }
-
-    private String getFileContent(String filePath) throws IOException {
-        String file_line;
-        StringBuilder file_content = new StringBuilder();
-        FileReader fr = new FileReader(new File(filePath));
-        BufferedReader br = new BufferedReader(fr);
-        while ((file_line = br.readLine()) != null) {
-            file_content.append(file_line);
-        }
-        br.close();
-        return file_content.toString();
     }
 }

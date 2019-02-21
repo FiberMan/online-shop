@@ -34,7 +34,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         // config
         Properties properties = new Properties();
-        try (FileInputStream fileInputStream = new FileInputStream("src/main/resources/db.properties")) {
+        try (FileInputStream fileInputStream = new FileInputStream("application.properties")) {
             properties.load(fileInputStream);
         }
 
@@ -67,10 +67,11 @@ public class Main {
         // services
         DefaultUserService userService = new DefaultUserService(userDao);
         DefaultProductService productService = new DefaultProductService(productDao);
-        SecurityService securityService = new SecurityService(userService);
+        SecurityService securityService = new SecurityService(userService, properties);
 
         // servlets
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.addServlet(new ServletHolder(new IndexServlet()), "/index.html");
         context.addServlet(new ServletHolder(new AllProductsServlet(productService, securityService)), "/products");
         context.addServlet(new ServletHolder(new AddProductServlet(productService, securityService)), "/product/add");
         context.addServlet(new ServletHolder(new EditProductServlet(productService, securityService)), "/product/edit");
@@ -78,8 +79,9 @@ public class Main {
         context.addServlet(new ServletHolder(new AllUsersServlet(userService, securityService)), "/users");
         context.addServlet(new ServletHolder(new LoginServlet(securityService)), "/login");
         context.addServlet(new ServletHolder(new LogoutServlet(securityService)), "/logout");
-        context.addServlet(new ServletHolder(new IndexServlet()), "/");
-        context.addServlet(new ServletHolder(new AllRequestsServlet()), "/*");
+        context.addServlet(new ServletHolder(new ReCreateDatabaseServlet(jdbcUtils)), "/db");
+        context.addServlet(new ServletHolder(new ResourcesServlet()), "/assets/*");
+        context.addServlet(new ServletHolder(new NotFoundServlet()), "/*");
 
         // filters
         context.addFilter(new FilterHolder(new AuthFilter(securityService)), "/product/*",

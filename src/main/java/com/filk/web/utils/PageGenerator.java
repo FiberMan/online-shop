@@ -34,6 +34,10 @@ public class PageGenerator {
         return stream.toString();
     }
 
+    public String getPage(String filename) {
+        return getPage(filename, null);
+    }
+
     private PageGenerator() {
         try {
             cfg = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);

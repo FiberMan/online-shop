@@ -14,7 +14,7 @@ public class JdbcUserDaoTest {
     @Test
     public void getByLoginTest() throws IOException {
         Properties properties = new Properties();
-        try(FileInputStream fileInputStream = new FileInputStream("src/main/resources/db.properties")) {
+        try(FileInputStream fileInputStream = new FileInputStream("application.properties")) {
             properties.load(fileInputStream);
         }
         JdbcUtils jdbcUtils = new JdbcUtils(properties);

@@ -1,8 +1,14 @@
 package com.filk.dao.jdbc;
 
+import com.filk.utils.AppUtils;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.sql.DataSource;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,16 +24,16 @@ public class JdbcUtils {
         PGSimpleDataSource dataSource = new PGSimpleDataSource();
 
         if(herokuDatabaseUrl == null) {
-            dataSource.setUrl(properties.getProperty("jdbc.url"));
-            dataSource.setUser(properties.getProperty("jdbc.username"));
-            dataSource.setPassword(properties.getProperty("jdbc.password"));
+            dataSource.setUrl(properties.getProperty("db.jdbc.url"));
+            dataSource.setUser(properties.getProperty("db.jdbc.username"));
+            dataSource.setPassword(properties.getProperty("db.jdbc.password"));
         } else {
             dataSource.setUrl(herokuDatabaseUrl + "&currentSchema=onlineshop");
         }
         this.dataSource = dataSource;
     }
 
-    ResultSet select(String query, Object... conditions) throws SQLException {
+    public ResultSet select(String query, Object... conditions) throws SQLException {
         PreparedStatement preparedStatement = prepareSql(query, conditions);
         if (!preparedStatement.execute()) {
             throw new RuntimeException("Not a SELECT statement.");
@@ -36,7 +42,7 @@ public class JdbcUtils {
 
     }
 
-    int update(String query, Object... conditions) throws SQLException {
+    public int update(String query, Object... conditions) throws SQLException {
         try (PreparedStatement preparedStatement = prepareSql(query, conditions)) {
             if (preparedStatement.execute()) {
                 throw new RuntimeException("Looks like a SELECT statement.");
@@ -61,6 +67,24 @@ public class JdbcUtils {
             }
         }
         return preparedStatement;
+    }
+
+    public void refreshDatabase() throws IOException {
+        URL resource1 = getClass().getClassLoader().getResource("sql/pg_create_tables.sql");
+        URL resource2 = getClass().getClassLoader().getResource("sql/insert_data.sql");
+
+        // refresh database
+        try {
+            String sql = AppUtils.getFileContent(resource1.getPath()) + AppUtils.getFileContent(resource2.getPath());
+            for (String s : sql.split(";")) {
+                if (!s.isEmpty()) {
+                    update(s);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Can't refresh database.");
+            e.printStackTrace();
+        }
     }
 
     private String getHerokuDatabaseUrl() {

@@ -11,14 +11,15 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class SecurityService {
-    private final int SESSION_LIFETIME_MINUTES = 2;
     private final String TOKEN_NAME = "user-token";
 
     private UserService userService;
+    private Properties properties;
     private List<Session> sessions = Collections.synchronizedList(new ArrayList<>());
 
-    public SecurityService(UserService userService) {
+    public SecurityService(UserService userService, Properties properties) {
         this.userService = userService;
+        this.properties = properties;
     }
 
     public Session login(String login, String password) {
@@ -77,7 +78,7 @@ public class SecurityService {
     }
 
     private LocalDateTime getExpireDate() {
-        return LocalDateTime.now().plusMinutes(SESSION_LIFETIME_MINUTES);
+        return LocalDateTime.now().plusMinutes(Long.parseLong(properties.getProperty("web.sessionLifetimeMinutes")));
     }
 
     public static String getHash(String password) {
