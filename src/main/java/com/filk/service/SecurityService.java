@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class SecurityService {
-    private final String TOKEN_NAME = "user-token";
+    private static final String TOKEN_NAME = "user-token";
 
     private UserService userService;
     private Properties properties;
@@ -39,6 +39,7 @@ public class SecurityService {
         return session;
     }
 
+    // TODO: use token instead of Cookie
     public Cookie logout(Cookie[] cookies) {
         Session session = getValidSession(cookies);
 

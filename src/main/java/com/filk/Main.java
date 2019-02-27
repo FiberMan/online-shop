@@ -21,15 +21,16 @@ import java.util.Properties;
 
 public class Main {
 
-    // +TODO: prepareStatement
-    // +TODO: data, mapper, service,
-    // TODO: presentation layer
-    // +TODO: bootstrap
-    // TODO: login
-    // TODO: add servlet filters
-    // +TODO: connection through DataSource
-    // TODO: store login/pass -> hash
     // TODO: read: Optional, DispatcherType
+
+    // TODO: Migrate Online Shop on spring
+    // TODO: configure filters
+    // TODO: Migrate all services and daos to annotations (@Service, @Repository)
+    // TODO: Separate context’s use Root and Servlet contexts (theory part 1)
+    // TODO: Configure Spring with Thymeleaf (or migrate to freemarker view resolver)
+    // TODO: Use Jdbc Template from spring-jdbc instead JDBC interfaces
+    // TODO: Add logback logging
+
 
     public static void main(String[] args) throws Exception {
         // config
@@ -38,13 +39,12 @@ public class Main {
             properties.load(fileInputStream);
         }
 
-        int port = 8080;
+        int port = Integer.parseInt(properties.getProperty("web.port"));
         String portEnv = System.getenv().get("PORT");
         if (portEnv != null) {
             port = Integer.parseInt(portEnv);
         }
 
-//        System.out.println(SecurityService.getHash("password95cKMbb0LCI0srpDhnJYHA=="));
 //        User: Filk
 //        Pass: password
 //        Salt: 95cKMbb0LCI0srpDhnJYHA==
