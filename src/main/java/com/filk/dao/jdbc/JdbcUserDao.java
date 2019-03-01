@@ -1,9 +1,7 @@
 package com.filk.dao.jdbc;
 
 import com.filk.dao.UserDao;
-import com.filk.dao.jdbc.mapper.ProductMapper;
 import com.filk.dao.jdbc.mapper.UserMapper;
-import com.filk.entity.Product;
 import com.filk.entity.User;
 
 import java.sql.ResultSet;

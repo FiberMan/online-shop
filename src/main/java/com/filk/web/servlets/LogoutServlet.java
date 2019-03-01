@@ -1,6 +1,6 @@
 package com.filk.web.servlets;
 
-import com.filk.service.SecurityService;
+import com.filk.service.impl.DefaultSecurityService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,14 +8,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class LogoutServlet extends HttpServlet {
-    private SecurityService securityService;
+    private DefaultSecurityService defaultSecurityService;
 
-    public LogoutServlet(SecurityService securityService) {
-        this.securityService = securityService;
+    public LogoutServlet(DefaultSecurityService defaultSecurityService) {
+        this.defaultSecurityService = defaultSecurityService;
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.addCookie(securityService.logout(request.getCookies()));
+        response.addCookie(defaultSecurityService.logout(request.getCookies()));
         response.sendRedirect("/login");
     }
 }

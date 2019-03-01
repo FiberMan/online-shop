@@ -1,6 +1,6 @@
 package com.filk.web.servlets;
 
-import com.filk.service.SecurityService;
+import com.filk.service.impl.DefaultSecurityService;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthFilter implements Filter {
-    private SecurityService securityService;
+    private DefaultSecurityService defaultSecurityService;
 
-    public AuthFilter(SecurityService securityService) {
-        this.securityService = securityService;
+    public AuthFilter(DefaultSecurityService defaultSecurityService) {
+        this.defaultSecurityService = defaultSecurityService;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
-        if(securityService.isTokenValid(httpServletRequest.getCookies())) {
+        if(defaultSecurityService.isTokenValid(httpServletRequest.getCookies())) {
             chain.doFilter(request, response);
         } else {
             httpServletResponse.sendRedirect("/login");

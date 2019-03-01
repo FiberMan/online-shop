@@ -3,8 +3,8 @@ package com.filk.web.servlets;
 import com.filk.entity.Product;
 import com.filk.entity.Session;
 import com.filk.entity.UserRole;
+import com.filk.service.impl.DefaultSecurityService;
 import com.filk.service.ProductService;
-import com.filk.service.SecurityService;
 import com.filk.web.utils.PageGenerator;
 
 import javax.servlet.http.HttpServlet;
@@ -16,15 +16,15 @@ import java.util.Map;
 
 public class EditProductServlet extends HttpServlet {
     private ProductService productService;
-    private SecurityService securityService;
+    private DefaultSecurityService defaultSecurityService;
 
-    public EditProductServlet(ProductService productService, SecurityService securityService) {
+    public EditProductServlet(ProductService productService, DefaultSecurityService defaultSecurityService) {
         this.productService = productService;
-        this.securityService = securityService;
+        this.defaultSecurityService = defaultSecurityService;
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Session session = securityService.getValidSession(request.getCookies());
+        Session session = defaultSecurityService.getValidSession(request.getCookies());
         boolean isLoggedIn = session != null;
         //boolean isUser = isLoggedIn && session.getUser().getUserRole() == UserRole.USER;
         boolean isAdmin = isLoggedIn && session.getUser().getUserRole() == UserRole.ADMIN;
@@ -63,7 +63,7 @@ public class EditProductServlet extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Session session = securityService.getValidSession(request.getCookies());
+        Session session = defaultSecurityService.getValidSession(request.getCookies());
         boolean isLoggedIn = session != null;
         //boolean isUser = isLoggedIn && session.getUser().getUserRole() == UserRole.USER;
         boolean isAdmin = isLoggedIn && session.getUser().getUserRole() == UserRole.ADMIN;

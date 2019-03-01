@@ -2,6 +2,7 @@ package com.filk.dao.jdbc;
 
 import com.filk.utils.AppUtils;
 import org.postgresql.ds.PGSimpleDataSource;
+import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.io.*;

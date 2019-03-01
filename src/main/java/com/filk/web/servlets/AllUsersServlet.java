@@ -2,13 +2,10 @@ package com.filk.web.servlets;
 
 import com.filk.entity.Session;
 import com.filk.entity.UserRole;
-import com.filk.service.SecurityService;
+import com.filk.service.impl.DefaultSecurityService;
 import com.filk.service.UserService;
-import com.filk.service.impl.DefaultUserService;
 import com.filk.web.utils.PageGenerator;
-import org.eclipse.jetty.servlet.Source;
 
-import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,15 +15,15 @@ import java.util.Map;
 
 public class AllUsersServlet extends HttpServlet {
     UserService userService;
-    SecurityService securityService;
+    DefaultSecurityService defaultSecurityService;
 
-    public AllUsersServlet(UserService userService, SecurityService securityService) {
+    public AllUsersServlet(UserService userService, DefaultSecurityService defaultSecurityService) {
         this.userService = userService;
-        this.securityService = securityService;
+        this.defaultSecurityService = defaultSecurityService;
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Session session = securityService.getValidSession(request.getCookies());
+        Session session = defaultSecurityService.getValidSession(request.getCookies());
         boolean isLoggedIn = session != null;
         //boolean isUser = isLoggedIn && session.getUser().getUserRole() == UserRole.USER;
         boolean isAdmin = isLoggedIn && session.getUser().getUserRole() == UserRole.ADMIN;

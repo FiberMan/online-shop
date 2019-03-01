@@ -1,8 +1,7 @@
 package com.filk.web.servlets;
 
 import com.filk.entity.Session;
-import com.filk.entity.UserRole;
-import com.filk.service.SecurityService;
+import com.filk.service.impl.DefaultSecurityService;
 import com.filk.web.utils.PageGenerator;
 
 import javax.servlet.http.HttpServlet;
@@ -13,14 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginServlet extends HttpServlet {
-    private SecurityService securityService;
+    private DefaultSecurityService defaultSecurityService;
 
-    public LoginServlet(SecurityService securityService) {
-        this.securityService = securityService;
+    public LoginServlet(DefaultSecurityService defaultSecurityService) {
+        this.defaultSecurityService = defaultSecurityService;
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Session session = securityService.getValidSession(request.getCookies());
+        Session session = defaultSecurityService.getValidSession(request.getCookies());
         boolean isLoggedIn = session != null;
 
         // User already logged in
@@ -44,7 +43,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Session session = securityService.getValidSession(request.getCookies());
+        Session session = defaultSecurityService.getValidSession(request.getCookies());
         boolean isLoggedIn = session != null;
 
         // User already logged in
@@ -52,7 +51,7 @@ public class LoginServlet extends HttpServlet {
             response.sendRedirect("/products");
         }
 
-        session = securityService.login(request.getParameter("login"), request.getParameter("password"));
+        session = defaultSecurityService.login(request.getParameter("login"), request.getParameter("password"));
         if(session != null) {
             response.addCookie(session.getCookie());
             response.sendRedirect("/products");
