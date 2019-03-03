@@ -1,1 +1,0 @@
-CREATE SCHEMA `onlineshop` DEFAULT CHARACTER SET utf8;

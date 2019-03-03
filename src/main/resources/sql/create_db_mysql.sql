@@ -1,3 +1,5 @@
+CREATE SCHEMA `onlineshop` DEFAULT CHARACTER SET utf8;
+
 DROP TABLE IF EXISTS onlineshop.user;
 CREATE TABLE `onlineshop`.`user` (
   `user_id` INT NOT NULL AUTO_INCREMENT,
