@@ -4,14 +4,14 @@ import com.filk.dao.ProductDao;
 import com.filk.dao.jdbc.mapper.ProductRowMapper;
 import com.filk.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
-@Service
+@Repository
 public class JdbcProductDao implements ProductDao {
     private final String GET_ALL_PRODUCTS_SQL = "SELECT * FROM product";
     private final String GET_PRODUCT_BY_ID_SQL = "SELECT * FROM product WHERE product_id = ?";
@@ -20,12 +20,6 @@ public class JdbcProductDao implements ProductDao {
     private final String UPDATE_PRODUCT_SQL = "UPDATE product SET name = ?, description = ?, price = ? WHERE product_id = ?";
     private final String DELETE_PRODUCT_SQL = "DELETE FROM product WHERE product_id = ?";
 
-    private JdbcUtils jdbcUtils;
-
-//    @Autowired
-//    public JdbcProductDao(JdbcUtils jdbcUtils) {
-//        this.jdbcUtils = jdbcUtils;
-//    }
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -40,39 +34,27 @@ public class JdbcProductDao implements ProductDao {
 
     @Override
     public Product getById(int id) {
-        Product product = null;
-//        try {
-//            ResultSet resultSet = jdbcUtils.select(GET_PRODUCT_BY_ID_SQL, id);
-//            if (resultSet.next()) {
-//                product = ProductRowMapper.map(resultSet);
-//            }
-//            resultSet.getStatement().getConnection().close();   // Closing: Connection -> Statement -> ResultSet
-//        } catch (SQLException e) {
-//            throw new RuntimeException("SQL Exception: Can't get Product by ID. ID = " + id, e);
-//        }
-        return product;
+        List<Product> products = jdbcTemplate.query(GET_PRODUCT_BY_ID_SQL, new ProductRowMapper(), id);
+        if(products.size() == 0) {
+            return null;
+        }
+        return products.get(0);
     }
 
     @Override
     public Product getByName(String name) {
-        Product product = null;
-//        try {
-//            ResultSet resultSet = jdbcUtils.select(GET_PRODUCT_BY_NAME_SQL, name);
-//            if (resultSet.next()) {
-//                product = ProductRowMapper.map(resultSet);
-//            }
-//            resultSet.getStatement().getConnection().close();   // Closing: Connection -> Statement -> ResultSet
-//        } catch (SQLException e) {
-//            throw new RuntimeException("SQL Exception: Can't get Product by Name. Name = " + name, e);
-//        }
-        return product;
+        List<Product> products = jdbcTemplate.query(GET_PRODUCT_BY_NAME_SQL, new ProductRowMapper(), name);
+        if(products.size() == 0) {
+            return null;
+        }
+        return products.get(0);
     }
 
     @Override
     public boolean insert(Product product) {
         try {
-            return !productExists(product) && jdbcUtils.update(INSERT_PRODUCT_SQL, product.getName(), product.getDescription(), product.getPrice()) > 0;
-        } catch (SQLException e) {
+            return !productExists(product) && jdbcTemplate.update(INSERT_PRODUCT_SQL, product.getName(), product.getDescription(), product.getPrice()) > 0;
+        } catch (DataAccessException e) {
             throw new RuntimeException("SQL Exception when inserting the product. Product name = " + product.getName(), e);
         }
     }
@@ -80,8 +62,8 @@ public class JdbcProductDao implements ProductDao {
     @Override
     public boolean update(Product product) {
         try {
-            return jdbcUtils.update(UPDATE_PRODUCT_SQL, product.getName(), product.getDescription(), product.getPrice(), product.getId()) > 0;
-        } catch (SQLException e) {
+            return jdbcTemplate.update(UPDATE_PRODUCT_SQL, product.getName(), product.getDescription(), product.getPrice(), product.getId()) > 0;
+        } catch (DataAccessException e) {
             throw new RuntimeException("SQL Exception when updating the product. Product name = " + product.getName(), e);
         }
     }
@@ -89,8 +71,8 @@ public class JdbcProductDao implements ProductDao {
     @Override
     public boolean deleteById(int id) {
         try {
-            return jdbcUtils.update(DELETE_PRODUCT_SQL, id) > 0;
-        } catch (SQLException e) {
+            return jdbcTemplate.update(DELETE_PRODUCT_SQL, id) > 0;
+        } catch (DataAccessException e) {
             throw new RuntimeException("SQL Exception when deleting the product. Product ID = " + id, e);
         }
     }

@@ -1,25 +1,11 @@
 package com.filk.entity;
 
-import javax.servlet.http.Cookie;
 import java.time.LocalDateTime;
 
 public class Session {
-    private String tokenName;
     private String token;
     private User user;
     private LocalDateTime expireDate;
-
-    public Cookie getCookie() {
-        return new Cookie(tokenName, token);
-    }
-
-    public String getTokenName() {
-        return tokenName;
-    }
-
-    public void setTokenName(String tokenName) {
-        this.tokenName = tokenName;
-    }
 
     public String getToken() {
         return token;

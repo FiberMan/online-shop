@@ -1,68 +1,37 @@
 package com.filk.dao.jdbc;
 
 import com.filk.dao.UserDao;
-import com.filk.dao.jdbc.mapper.UserMapper;
+import com.filk.dao.jdbc.mapper.UserRowMapper;
 import com.filk.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class JdbcUserDao implements UserDao {
-    private final String SQL_GET_ALL_USERS = "SELECT * FROM \"user\"";
-    private final String SQL_GET_USER_BY_LOGIN = "SELECT * FROM \"user\" WHERE lower(login) = lower(?)";
-    private JdbcUtils jdbcUtils;
+    private final String GET_ALL_USERS_SQL = "SELECT * FROM \"user\"";
+    private final String GET_USER_BY_LOGIN_SQL = "SELECT * FROM \"user\" WHERE lower(login) = lower(?)";
 
-    public JdbcUserDao(JdbcUtils jdbcUtils) {
-        this.jdbcUtils = jdbcUtils;
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public JdbcUserDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public List<User> getAll() {
-        List<User> users = new ArrayList<>();
-
-        try {
-            ResultSet resultSet = jdbcUtils.select(SQL_GET_ALL_USERS);
-            while (resultSet.next()) {
-                users.add(UserMapper.map(resultSet));
-            }
-            resultSet.getStatement().getConnection().close();   // Closing: Connection -> Statement -> ResultSet
-        } catch (SQLException e) {
-            throw new RuntimeException("SQL Exception: Can't get all users.", e);
-        }
-        return users;
+        return jdbcTemplate.query(GET_ALL_USERS_SQL, new UserRowMapper());
     }
 
     public User getByLogin(String login) {
-        try {
-            ResultSet resultSet = jdbcUtils.select(SQL_GET_USER_BY_LOGIN, login);
-            User user = null;
-            if (resultSet.next()) {
-                user = UserMapper.map(resultSet);
-            }
-            resultSet.getStatement().getConnection().close();   // Closing: Connection -> Statement -> ResultSet
-            return user;
-        } catch (SQLException e) {
-            throw new RuntimeException("SQL Exception: Can't get User by Login. Login = " + login, e);
+        List<User> users = jdbcTemplate.query(GET_USER_BY_LOGIN_SQL, new UserRowMapper(), login);
+        if(users.size() == 0) {
+            return null;
         }
+        return users.get(0);
     }
-
-
-
-//    public User getByLogin(String login) {
-//        try(Connection connection = dataSource.getConnection();
-//            PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_USER_BY_LOGIN)) {
-//            preparedStatement.setString(1, login.toLowerCase());
-//            try(ResultSet resultSet = preparedStatement.executeQuery()) {
-//                User user = new User();
-//                if(resultSet.next()) {
-//                    user = UserMapper.map(resultSet);
-//                }
-//                return user;
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 }

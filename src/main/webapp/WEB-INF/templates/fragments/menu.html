@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu</title>
+</head>
+<body>
+<div th:fragment="menu">
+    <nav>
+        <div class="nav nav-tabs">
+            <!--nav_state: active | disabled-->
+            <a th:if="${nav_state_products}!='disabled'" th:class="'nav-item nav-link ' + ${nav_state_products}" href="/products">Products</a>
+            <a th:if="${nav_state_product_add}!='disabled'" th:class="'nav-item nav-link ' + ${nav_state_product_add}" href="/product/add">Add product</a>
+            <a th:if="${nav_state_users}!='disabled'" th:class="'nav-item nav-link ' + ${nav_state_users}" href="/users">Users</a>
+            <a th:if="${nav_state_login}!='disabled'" th:class="'nav-item nav-link ' + ${nav_state_login}" href="/login">Log in</a>
+            <a th:if="${nav_state_logout}!='disabled'" th:class="'nav-item nav-link ' + ${nav_state_logout}" href="/logout">Log out</a>
+            <span th:if="${user_name}!=''" class="navbar-text" style="margin-left: auto;">Hi, <strong>[[${user_name}]]</strong></span>
+        </div>
+    </nav>
+    <br>
+    <br>
+</div>
+</body>
+</html>

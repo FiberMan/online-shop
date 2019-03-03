@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class UserMapperTest {
+public class UserRowMapperTest {
     @Test
     public void mapTest() throws SQLException {
         ResultSet resultSetMock = mock(ResultSet.class);
@@ -21,7 +21,7 @@ public class UserMapperTest {
         when(resultSetMock.getString("login_salt")).thenReturn("95cKMbb0LCI0srpDhnJYHA==");
         when(resultSetMock.getString("user_role")).thenReturn("ADMIN");
 
-        User user = UserMapper.map(resultSetMock);
+        User user = UserRowMapper.map(resultSetMock);
 
         assertEquals(1, user.getId());
         assertEquals("Y F", user.getName());

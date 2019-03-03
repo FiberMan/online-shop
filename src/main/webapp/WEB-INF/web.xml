@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app>
+    <request-character-encoding>UTF-8</request-character-encoding>
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -20,5 +22,48 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 
+    <!--FILTERS-->
+    <!--Filter to enforce UTF-8 encoding for requests-->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>userFilter</filter-name>
+        <filter-class>com.filk.web.filter.UserRoleFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>userFilter</filter-name>
+        <url-pattern>/product/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>adminFilter</filter-name>
+        <filter-class>com.filk.web.filter.AdminRoleFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>adminFilter</filter-name>
+        <url-pattern>/product/*</url-pattern>
+        <url-pattern>/users</url-pattern>
+    </filter-mapping>
+
+    <!--ERRORS-->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/404.html</location>
+    </error-page>
 
 </web-app>

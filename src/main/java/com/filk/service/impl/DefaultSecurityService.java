@@ -4,24 +4,27 @@ import com.filk.entity.Session;
 import com.filk.entity.User;
 import com.filk.service.SecurityService;
 import com.filk.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Service
 public class DefaultSecurityService implements SecurityService {
-    private static final String TOKEN_NAME = "user-token";
+    @Value("${web.sessionLifetimeMinutes}")
+    private String sessionLifetimeMinutes;
 
     private UserService userService;
-    private Properties properties;
     private List<Session> sessions = Collections.synchronizedList(new ArrayList<>());
 
-    public DefaultSecurityService(UserService userService, Properties properties) {
+    @Autowired
+    public DefaultSecurityService(UserService userService) {
         this.userService = userService;
-        this.properties = properties;
     }
 
     public Session login(String login, String password) {
@@ -31,7 +34,6 @@ public class DefaultSecurityService implements SecurityService {
         }
 
         Session session = new Session();
-        session.setTokenName(TOKEN_NAME);
         session.setToken(UUID.randomUUID().toString());
         session.setExpireDate(getExpireDate());
         session.setUser(user);
@@ -42,32 +44,24 @@ public class DefaultSecurityService implements SecurityService {
     }
 
     // TODO: use token instead of Cookie
-    public Cookie logout(Cookie[] cookies) {
-        Session session = getValidSession(cookies);
+    public void logout(String token) {
+        Session session = getValidSession(token);
 
         if (session != null) {
             sessions.remove(session);
         }
-
-        Cookie cookie = new Cookie(TOKEN_NAME, "");
-        cookie.setMaxAge(0);
-        return cookie;
     }
 
-    public Session getValidSession(Cookie[] cookies) {
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (TOKEN_NAME.equals(cookie.getName())) {
-                    for (Session session : sessions) {
-                        if (session.getToken().equals(cookie.getValue())) {
-                            if (session.isLive()) {
-                                session.setExpireDate(getExpireDate()); // update expiration date
-                                return session;
-                            } else {
-                                sessions.remove(session);
-                                return null;
-                            }
-                        }
+    public Session getValidSession(String token) {
+        if (token != null) {
+            for (Session session : sessions) {
+                if (session.getToken().equals(token)) {
+                    if (session.isLive()) {
+                        session.setExpireDate(getExpireDate()); // update expiration date
+                        return session;
+                    } else {
+                        sessions.remove(session);
+                        return null;
                     }
                 }
             }
@@ -75,13 +69,12 @@ public class DefaultSecurityService implements SecurityService {
         return null;
     }
 
-
-    public boolean isTokenValid(Cookie[] cookies) {
-        return getValidSession(cookies) != null;
+    public boolean isTokenValid(String token) {
+        return getValidSession(token) != null;
     }
 
     private LocalDateTime getExpireDate() {
-        return LocalDateTime.now().plusMinutes(Long.parseLong(properties.getProperty("web.sessionLifetimeMinutes")));
+        return LocalDateTime.now().plusMinutes(Long.parseLong(sessionLifetimeMinutes));
     }
 
     public static String getHash(String password) {
