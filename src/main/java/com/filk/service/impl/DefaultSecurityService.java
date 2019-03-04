@@ -49,7 +49,6 @@ public class DefaultSecurityService implements SecurityService {
         return session;
     }
 
-    // TODO: use token instead of Cookie
     public void logout(String token) {
         Session session = getValidSession(token);
 

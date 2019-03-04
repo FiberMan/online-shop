@@ -32,7 +32,7 @@ public class CartController {
         boolean isUser = isLoggedIn && session.getUser().getUserRole() == UserRole.USER;
         boolean isAdmin = isLoggedIn && session.getUser().getUserRole() == UserRole.ADMIN;
 
-        model.addAttribute("title", "List of products");
+        model.addAttribute("title", "Product Cart");
         model.addAttribute("products", session.getCart());
         model.addAttribute("nav_state_products", "");
         model.addAttribute("nav_state_product_add", isAdmin? "" : "disabled");
@@ -64,8 +64,7 @@ public class CartController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/cart/delete")
     public String removeFromCart(@RequestParam(name = "product_id") String productId,
-                                 @CookieValue(name = "user-token", required = false) String token,
-                                 Model model) {
+                                 @CookieValue(name = "user-token", required = false) String token) {
         Session session = securityService.getValidSession(token);
 
         if(session != null) {

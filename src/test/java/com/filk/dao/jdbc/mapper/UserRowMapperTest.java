@@ -21,7 +21,7 @@ public class UserRowMapperTest {
         when(resultSetMock.getString("login_salt")).thenReturn("95cKMbb0LCI0srpDhnJYHA==");
         when(resultSetMock.getString("user_role")).thenReturn("ADMIN");
 
-        User user = UserRowMapper.map(resultSetMock);
+        User user = new UserRowMapper().mapRow(resultSetMock, 0);
 
         assertEquals(1, user.getId());
         assertEquals("Y F", user.getName());

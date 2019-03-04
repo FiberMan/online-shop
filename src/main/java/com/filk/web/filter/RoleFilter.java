@@ -10,10 +10,11 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.EnumSet;
 
 public abstract class RoleFilter implements Filter {
     private SecurityService securityService;
-    private UserRole userRole;
+    private EnumSet<UserRole> userRoles = EnumSet.noneOf(UserRole.class);
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -21,7 +22,7 @@ public abstract class RoleFilter implements Filter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
         Session session = securityService.getValidSession(getToken(httpServletRequest.getCookies()));
-        if(session != null && session.getUser().getUserRole() == userRole) {
+        if (session != null && userRoles.contains(session.getUser().getUserRole())) {
             chain.doFilter(request, response);
         } else {
             httpServletResponse.sendRedirect("/login");
@@ -40,14 +41,14 @@ public abstract class RoleFilter implements Filter {
     public void destroy() {
     }
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
+    public void setUserRole(EnumSet<UserRole> userRoles) {
+        this.userRoles = userRoles;
     }
 
     private String getToken(Cookie[] cookies) {
-        if(cookies != null) {
+        if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if("user-token".equals(cookie.getName())) {
+                if ("user-token".equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }

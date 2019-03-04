@@ -27,24 +27,20 @@
             <td>[[${product.name}]]</td>
             <td>[[${product.description}]]</td>
             <td>[[${#numbers.formatDecimal(product.price, 1, 2, 'POINT')}]]</td>
-            <td th:if="${can_edit}">
-                <form method="get" action="/product/edit">
+            <td>
+                <form th:if="${can_edit}" method="get" action="/product/edit">
                     <input type="submit" value="Edit">
                     <input name="product_id" type="hidden" th:value="${product.id}">
                 </form>
-                <form method="post" action="/product/delete">
+                <form th:if="${can_edit}" method="post" action="/product/delete">
                     <input type="submit" value="Delete">
                     <input name="product_id" type="hidden" th:value="${product.id}">
                 </form>
-            </td>
-            <td th:if="${can_add_to_cart}">
-                <form method="post" action="/cart/add">
+                <form th:if="${can_add_to_cart}" method="post" action="/cart/add">
                     <input type="submit" value="Add to Cart">
                     <input name="product_id" type="hidden" th:value="${product.id}">
                 </form>
-            </td>
-            <td th:if="${can_remove_from_cart}">
-                <form method="post" action="/cart/delete">
+                <form th:if="${can_remove_from_cart}" method="post" action="/cart/delete">
                     <input type="submit" value="Remove from Cart">
                     <input name="product_id" type="hidden" th:value="${product.id}">
                 </form>

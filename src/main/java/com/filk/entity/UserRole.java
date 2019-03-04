@@ -1,8 +1,8 @@
 package com.filk.entity;
 
 public enum UserRole {
-    USER("USER"),   // can manage products
-    ADMIN("ADMIN"); // can manage users also
+    USER("USER"),   // can manage product cart
+    ADMIN("ADMIN"); // can manage products and users also
 
     private final String name;
 
