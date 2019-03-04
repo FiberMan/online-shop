@@ -39,6 +39,7 @@ public class UserController {
         model.addAttribute("nav_state_products", "");
         model.addAttribute("nav_state_product_add", "");
         model.addAttribute("nav_state_users", isAdmin ? "" : "disabled");
+        model.addAttribute("nav_state_cart", isLoggedIn ? "" : "disabled");
         model.addAttribute("nav_state_login", isLoggedIn ? "disabled" : "");
         model.addAttribute("nav_state_logout", isLoggedIn ? "" : "disabled");
         //model.addAttribute("can_edit", isAdmin);
@@ -63,6 +64,7 @@ public class UserController {
         model.addAttribute("nav_state_products", "");
         model.addAttribute("nav_state_product_add", "disabled");
         model.addAttribute("nav_state_users", "disabled");
+        model.addAttribute("nav_state_cart", "disabled");
         model.addAttribute("nav_state_login", "active");
         model.addAttribute("nav_state_logout", "disabled");
         model.addAttribute("user_name", "");
@@ -94,6 +96,7 @@ public class UserController {
             model.addAttribute("nav_state_products", "");
             model.addAttribute("nav_state_product_add", "disabled");
             model.addAttribute("nav_state_users", "disabled");
+            model.addAttribute("nav_state_cart", "disabled");
             model.addAttribute("nav_state_login", "active");
             model.addAttribute("nav_state_logout", "disabled");
             model.addAttribute("user_name", "");

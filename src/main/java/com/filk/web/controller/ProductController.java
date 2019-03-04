@@ -39,9 +39,12 @@ public class ProductController {
         model.addAttribute("nav_state_products", "active");
         model.addAttribute("nav_state_product_add", isAdmin? "" : "disabled");
         model.addAttribute("nav_state_users", isAdmin ? "" : "disabled");
+        model.addAttribute("nav_state_cart", isLoggedIn ? "" : "disabled");
         model.addAttribute("nav_state_login", isLoggedIn ? "disabled" : "");
         model.addAttribute("nav_state_logout", isLoggedIn ? "" : "disabled");
         model.addAttribute("can_edit", isAdmin);
+        model.addAttribute("can_add_to_cart", isUser || isAdmin);
+        model.addAttribute("show_action_column", isUser || isAdmin);
         model.addAttribute("user_name", isLoggedIn ? session.getUser().getName() : "");
 
         return "products";
@@ -53,7 +56,7 @@ public class ProductController {
                                  Model model) {
         Session session = securityService.getValidSession(token);
         boolean isLoggedIn = session != null;
-        //boolean isUser = isLoggedIn && session.getUser().getUserRole() == UserRole.USER;
+//        boolean isUser = isLoggedIn && session.getUser().getUserRole() == UserRole.USER;
         boolean isAdmin = isLoggedIn && session.getUser().getUserRole() == UserRole.ADMIN;
         
         Product product = productService.getById(Integer.parseInt(productId));
@@ -62,6 +65,7 @@ public class ProductController {
         model.addAttribute("nav_state_products", "");
         model.addAttribute("nav_state_product_add", "");
         model.addAttribute("nav_state_users", isAdmin ? "" : "disabled");
+        model.addAttribute("nav_state_cart",isLoggedIn ? "" : "disabled");
         model.addAttribute("nav_state_login", isLoggedIn ? "disabled" : "");
         model.addAttribute("nav_state_logout", isLoggedIn ? "" : "disabled");
         model.addAttribute("user_name", isLoggedIn ? session.getUser().getName() : "");
@@ -109,6 +113,7 @@ public class ProductController {
         model.addAttribute("nav_state_products", "");
         model.addAttribute("nav_state_product_add", "");
         model.addAttribute("nav_state_users", isAdmin ? "" : "disabled");
+        model.addAttribute("nav_state_cart", isLoggedIn ? "" : "disabled");
         model.addAttribute("nav_state_login", isLoggedIn ? "disabled" : "");
         model.addAttribute("nav_state_logout", isLoggedIn ? "" : "disabled");
         model.addAttribute("user_name", isLoggedIn ? session.getUser().getName() : "");
@@ -141,6 +146,7 @@ public class ProductController {
         model.addAttribute("nav_state_products", "");
         model.addAttribute("nav_state_product_add", "active");
         model.addAttribute("nav_state_users", isAdmin ? "" : "disabled");
+        model.addAttribute("nav_state_cart", isLoggedIn ? "" : "disabled");
         model.addAttribute("nav_state_login", isLoggedIn ? "disabled" : "");
         model.addAttribute("nav_state_logout", isLoggedIn ? "" : "disabled");
         model.addAttribute("can_edit", isAdmin);
@@ -168,6 +174,7 @@ public class ProductController {
         model.addAttribute("nav_state_products", "");
         model.addAttribute("nav_state_product_add", "active");
         model.addAttribute("nav_state_users", isAdmin ? "" : "disabled");
+        model.addAttribute("nav_state_cart", isLoggedIn ? "" : "disabled");
         model.addAttribute("nav_state_login", isLoggedIn ? "disabled" : "");
         model.addAttribute("nav_state_logout", isLoggedIn ? "" : "disabled");
         model.addAttribute("user_name", isLoggedIn ? session.getUser().getName() : "");
@@ -194,6 +201,7 @@ public class ProductController {
         model.addAttribute("nav_state_products", "");
         model.addAttribute("nav_state_product_add", "");
         model.addAttribute("nav_state_users", isAdmin ? "" : "disabled");
+        model.addAttribute("nav_state_cart", isLoggedIn ? "" : "disabled");
         model.addAttribute("nav_state_login", isLoggedIn ? "disabled" : "");
         model.addAttribute("nav_state_logout", isLoggedIn ? "" : "disabled");
         model.addAttribute("user_name", isLoggedIn ? session.getUser().getName() : "");

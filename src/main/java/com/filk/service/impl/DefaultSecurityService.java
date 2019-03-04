@@ -33,6 +33,12 @@ public class DefaultSecurityService implements SecurityService {
             return null;
         }
 
+        for (Session session : sessions) {
+            if (session.getUser().getId() == user.getId()) {
+                return session;
+            }
+        }
+
         Session session = new Session();
         session.setToken(UUID.randomUUID().toString());
         session.setExpireDate(getExpireDate());

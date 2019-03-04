@@ -48,6 +48,8 @@
     <filter-mapping>
         <filter-name>userFilter</filter-name>
         <url-pattern>/product/*</url-pattern>
+        <!--<url-pattern>/cart</url-pattern>-->
+        <!--<url-pattern>/cart/*</url-pattern>-->
     </filter-mapping>
 
     <filter>
@@ -57,7 +59,9 @@
     <filter-mapping>
         <filter-name>adminFilter</filter-name>
         <url-pattern>/product/*</url-pattern>
-        <url-pattern>/users</url-pattern>
+        <url-pattern>/cart</url-pattern>
+        <!--<url-pattern>/cart/*</url-pattern>-->
+        <!--<url-pattern>/users</url-pattern>-->
     </filter-mapping>
 
     <!--ERRORS-->

@@ -18,7 +18,7 @@
             <th scope="col">Name</th>
             <th scope="col">Description</th>
             <th scope="col">Price</th>
-            <th th:if="${can_edit}" scope="col">Action</th>
+            <th th:if="${show_action_column}" scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -34,6 +34,18 @@
                 </form>
                 <form method="post" action="/product/delete">
                     <input type="submit" value="Delete">
+                    <input name="product_id" type="hidden" th:value="${product.id}">
+                </form>
+            </td>
+            <td th:if="${can_add_to_cart}">
+                <form method="post" action="/cart/add">
+                    <input type="submit" value="Add to Cart">
+                    <input name="product_id" type="hidden" th:value="${product.id}">
+                </form>
+            </td>
+            <td th:if="${can_remove_from_cart}">
+                <form method="post" action="/cart/delete">
+                    <input type="submit" value="Remove from Cart">
                     <input name="product_id" type="hidden" th:value="${product.id}">
                 </form>
             </td>
